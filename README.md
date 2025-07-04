@@ -1,4 +1,4 @@
-# Tennis-player-performance-analysis-and-prediction
+# Tennis Player Performance Analysis and Prediction
 
 A web application to analyze tennis player performance and predict match outcomes using machine learning. Intended for sports analytics and (casual/fun) gambling.
 
