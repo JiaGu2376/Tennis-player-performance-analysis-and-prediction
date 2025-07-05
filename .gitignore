@@ -1,0 +1,15 @@
+# macOS system files
+.DS_Store
+
+# Virtual environments
+venv/
+
+# Raw data files
+data/raw/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Python bytecode
+__pycache__/
+*.pyc
