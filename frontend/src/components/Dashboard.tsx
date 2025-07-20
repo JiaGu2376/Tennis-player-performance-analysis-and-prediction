@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 interface MatchPrediction {
   id: string;
@@ -155,12 +156,14 @@ const Dashboard: FC = () => {
                         <span className="mx-2 text-neutral-200">vs</span>
                         <PlayerImage src={pred.player2Image} alt={pred.player2} className="w-8 h-8 rounded-full" />
                       </div>
-                      <span className="font-medium text-neutral-100">{pred.player1} vs {pred.player2}</span>
+                      <span className="font-medium text-neutral-100">
+                        <Link to={`/player/${encodeURIComponent(pred.player1)}`} className="hover:underline text-green-300">{pred.player1}</Link> vs <Link to={`/player/${encodeURIComponent(pred.player2)}`} className="hover:underline text-green-300">{pred.player2}</Link>
+                      </span>
                     </div>
                     <span className="text-sm text-neutral-300">{new Date(pred.matchTime).toLocaleDateString()}</span>
                   </div>
                   <div className="text-sm text-neutral-300">
-                    Predicted Winner: <span className="font-medium text-neutral-100">{pred.predictedWinner}</span>
+                    Predicted Winner: <Link to={`/player/${encodeURIComponent(pred.predictedWinner)}`} className="font-medium text-green-300 hover:underline">{pred.predictedWinner}</Link>
                     <div className="mt-1 bg-green-950/50 rounded-full h-2">
                       <div 
                         className="bg-neutral-100 h-2 rounded-full" 
@@ -186,7 +189,9 @@ const Dashboard: FC = () => {
                     <span className="font-medium text-neutral-200">vs</span>
                     <PlayerImage src={match.player2Image} alt={match.player2} className="w-8 h-8 rounded-full" />
                   </div>
-                  <div className="font-medium text-neutral-100">{match.player1} vs {match.player2}</div>
+                  <div className="font-medium text-neutral-100">
+                    <Link to={`/player/${encodeURIComponent(match.player1)}`} className="hover:underline text-green-300">{match.player1}</Link> vs <Link to={`/player/${encodeURIComponent(match.player2)}`} className="hover:underline text-green-300">{match.player2}</Link>
+                  </div>
                   <div className="text-sm text-neutral-300 mt-1">
                     <span>{match.round}</span>
                     <span className="mx-2">•</span>
@@ -207,7 +212,9 @@ const Dashboard: FC = () => {
                     <PlayerImage src={player.imageUrl} alt={player.name} className="w-10 h-10 rounded-full" />
                     <div className="flex-1">
                       <div className="flex justify-between items-center">
-                        <span className="font-medium text-neutral-100">{player.name}</span>
+                        <span className="font-medium text-neutral-100">
+                          <Link to={`/player/${encodeURIComponent(player.name)}`} className="hover:underline text-green-300">{player.name}</Link>
+                        </span>
                         <span className="text-sm text-neutral-300">Rank #{player.rank}</span>
                       </div>
                       <div className="mt-2 space-y-1">
@@ -244,9 +251,13 @@ const Dashboard: FC = () => {
                     <PlayerImage src={result.loserImage} alt={result.loser} className="w-8 h-8 rounded-full" />
                   </div>
                   <div>
-                    <span className="font-medium text-neutral-100">{result.winner}</span>
+                    <span className="font-medium text-neutral-100">
+                      <Link to={`/player/${encodeURIComponent(result.winner)}`} className="hover:underline text-green-300">{result.winner}</Link>
+                    </span>
                     <span className="text-neutral-300"> def. </span>
-                    <span className="font-medium text-neutral-200">{result.loser}</span>
+                    <span className="font-medium text-neutral-200">
+                      <Link to={`/player/${encodeURIComponent(result.loser)}`} className="hover:underline text-green-300">{result.loser}</Link>
+                    </span>
                   </div>
                   <div className="text-sm text-neutral-300 mt-1">
                     <span>{result.score}</span>

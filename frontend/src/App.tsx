@@ -1,7 +1,18 @@
+import { Routes, Route } from 'react-router-dom';
+import NavBar from './components/NavBar';
+import PlayerProfile from './components/PlayerProfile';
 import Dashboard from './components/Dashboard';
 
 function App() {
-  return <Dashboard />;
+  return (
+    <>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/player/:playerName" element={<PlayerProfile />} />
+      </Routes>
+    </>
+  );
 }
 
 export default App;
