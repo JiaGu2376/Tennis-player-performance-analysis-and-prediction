@@ -59,7 +59,9 @@ const PlayerProfile: FC = () => {
         <div className="space-y-2">
           {player.recentMatches.map((match: any, idx: number) => (
             <div key={idx} className="bg-green-900/40 p-3 rounded flex justify-between items-center">
-              <span className="text-neutral-100">vs {match.opponent}</span>
+              <span className="text-neutral-100">
+                vs <Link to={`/player/${encodeURIComponent(match.opponent)}`} className="hover:underline text-green-300">{match.opponent}</Link>
+              </span>
               <span className={match.result === 'W' ? 'text-green-400' : 'text-red-400'}>{match.result}</span>
               <span className="text-neutral-200">{match.score}</span>
             </div>
