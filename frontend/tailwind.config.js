@@ -23,8 +23,18 @@ export default {
           200: '#BEBEA6',
           100: '#F2EFDE',
           50: '#F8F6EA',
-        }
-      }
+        },
+        background: {
+          DEFAULT: '#F3F3F3',
+        },
+        text: {
+          DEFAULT: '#0C0C0C',
+        },
+      },
+      fontFamily: {
+        ttcommons: ['TT Commons', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+      },
     },
   },
   plugins: [],

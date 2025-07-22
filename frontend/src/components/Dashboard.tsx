@@ -138,9 +138,9 @@ const Dashboard: FC = () => {
   ];
 
   return (
-    <div className="min-h-screen w-full bg-green-800 text-neutral-100">
+    <div className="min-h-screen w-full bg-background text-text">
       <div className="max-w-7xl mx-auto p-6">
-        <h1 className="text-3xl font-bold text-neutral-100 mb-8">Tennis Performance Dashboard</h1>
+        <h1 className="text-6xl font-medium font-ttcommons mb-8">Tennis Performance Dashboard</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Latest Predictions */}
@@ -203,40 +203,42 @@ const Dashboard: FC = () => {
           </div>
 
           {/* Player Stats and Form Rankings */}
-          <div className="bg-green-900/50 rounded-lg p-6 shadow-md">
-            <h2 className="text-xl font-semibold text-neutral-100 mb-4">Player Stats & Form</h2>
-            <div className="space-y-4">
-              {playerStats.map(player => (
-                <div key={player.id} className="bg-green-900/30 p-4 rounded-md shadow-sm">
-                  <div className="flex items-center space-x-3">
-                    <PlayerImage src={player.imageUrl} alt={player.name} className="w-10 h-10 rounded-full" />
-                    <div className="flex-1">
-                      <div className="flex justify-between items-center">
-                        <span className="font-medium text-neutral-100">
-                          <Link to={`/player/${encodeURIComponent(player.name)}`} className="hover:underline text-green-300">{player.name}</Link>
-                        </span>
-                        <span className="text-sm text-neutral-300">Rank #{player.rank}</span>
-                      </div>
-                      <div className="mt-2 space-y-1">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-neutral-300">Win Rate</span>
-                          <span className="font-medium text-neutral-100">{player.winRate}%</span>
+          <Link to="/players" className="block group">
+            <div className="bg-green-900/50 rounded-lg p-6 shadow-md cursor-pointer group-hover:bg-green-900/70 transition">
+              <h2 className="text-xl font-semibold text-neutral-100 mb-4">Player Profiles</h2>
+              <div className="space-y-4">
+                {playerStats.map(player => (
+                  <div key={player.id} className="bg-green-900/30 p-4 rounded-md shadow-sm">
+                    <div className="flex items-center space-x-3">
+                      <PlayerImage src={player.imageUrl} alt={player.name} className="w-10 h-10 rounded-full" />
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium text-neutral-100">
+                            <Link to={`/player/${encodeURIComponent(player.name)}`} className="hover:underline text-green-300">{player.name}</Link>
+                          </span>
+                          <span className="text-sm text-neutral-300">Rank #{player.rank}</span>
                         </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-neutral-300">Form Rank</span>
-                          <span className="font-medium text-neutral-100">#{player.formRank}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-neutral-300">Recent Form</span>
-                          <span className="font-medium text-neutral-100">{player.recentPerformance}%</span>
+                        <div className="mt-2 space-y-1">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-neutral-300">Win Rate</span>
+                            <span className="font-medium text-neutral-100">{player.winRate}%</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-neutral-300">Form Rank</span>
+                            <span className="font-medium text-neutral-100">#{player.formRank}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-neutral-300">Recent Form</span>
+                            <span className="font-medium text-neutral-100">{player.recentPerformance}%</span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          </Link>
 
           {/* Recent Results */}
           <div className="bg-green-900/50 rounded-lg p-6 shadow-md md:col-span-2 lg:col-span-3">
