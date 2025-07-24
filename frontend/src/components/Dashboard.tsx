@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import PlayerCarousel from './PlayerCarousel';
 
 interface MatchPrediction {
   id: string;
@@ -22,16 +23,6 @@ interface UpcomingMatch {
   tournament: string;
   round: string;
   dateTime: string;
-}
-
-interface PlayerStats {
-  id: string;
-  name: string;
-  imageUrl: string;
-  winRate: number;
-  rank: number;
-  formRank: number;
-  recentPerformance: number;
 }
 
 interface MatchResult {
@@ -110,19 +101,6 @@ const Dashboard: FC = () => {
     // Add more matches...
   ];
 
-  const playerStats: PlayerStats[] = [
-    {
-      id: '1',
-      name: 'Carlos Alcaraz',
-      imageUrl: playerImages['Carlos Alcaraz'] || defaultPlayerImage,
-      winRate: 82.5,
-      rank: 2,
-      formRank: 1,
-      recentPerformance: 95.0
-    },
-    // Add more players...
-  ];
-
   const recentResults: MatchResult[] = [
     {
       id: '1',
@@ -141,10 +119,11 @@ const Dashboard: FC = () => {
     <div className="min-h-screen w-full bg-background text-text">
       <div className="max-w-7xl mx-auto p-6">
         <h1 className="text-6xl font-medium font-ttcommons mb-8">Tennis Performance Dashboard</h1>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        {/* Top row - Predictions and Matches */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Latest Predictions */}
-          <div className="bg-green-900/50 rounded-lg p-6 shadow-md">
+          <div className="bg-green-900/50 rounded-lg p-6 shadow-md md:col-span-1">
             <h2 className="text-xl font-semibold text-neutral-100 mb-4">Latest Predictions</h2>
             <div className="space-y-4">
               {predictions.map(pred => (
@@ -178,7 +157,7 @@ const Dashboard: FC = () => {
           </div>
 
           {/* Upcoming Matches */}
-          <div className="bg-green-900/50 rounded-lg p-6 shadow-md">
+          <div className="bg-green-900/50 rounded-lg p-6 shadow-md md:col-span-1">
             <h2 className="text-xl font-semibold text-neutral-100 mb-4">Upcoming Matches</h2>
             <div className="space-y-4">
               {upcomingMatches.map(match => (
@@ -201,49 +180,12 @@ const Dashboard: FC = () => {
               ))}
             </div>
           </div>
+        </div>
 
-          {/* Player Stats and Form Rankings */}
-          <Link to="/players" className="block group">
-            <div className="bg-green-900/50 rounded-lg p-6 shadow-md cursor-pointer group-hover:bg-green-900/70 transition">
-              <h2 className="text-xl font-semibold text-neutral-100 mb-4">Player Profiles</h2>
-              <div className="space-y-4">
-                {playerStats.map(player => (
-                  <div key={player.id} className="bg-green-900/30 p-4 rounded-md shadow-sm">
-                    <div className="flex items-center space-x-3">
-                      <PlayerImage src={player.imageUrl} alt={player.name} className="w-10 h-10 rounded-full" />
-                      <div className="flex-1">
-                        <div className="flex justify-between items-center">
-                          <span className="font-medium text-neutral-100">
-                            <Link to={`/player/${encodeURIComponent(player.name)}`} className="hover:underline text-green-300">{player.name}</Link>
-                          </span>
-                          <span className="text-sm text-neutral-300">Rank #{player.rank}</span>
-                        </div>
-                        <div className="mt-2 space-y-1">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-neutral-300">Win Rate</span>
-                            <span className="font-medium text-neutral-100">{player.winRate}%</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-neutral-300">Form Rank</span>
-                            <span className="font-medium text-neutral-100">#{player.formRank}</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-neutral-300">Recent Form</span>
-                            <span className="font-medium text-neutral-100">{player.recentPerformance}%</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Link>
-
-          {/* Recent Results */}
-          <div className="bg-green-900/50 rounded-lg p-6 shadow-md md:col-span-2 lg:col-span-3">
-            <h2 className="text-xl font-semibold text-neutral-100 mb-4">Recent Match Results</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Second row - Recent Results */}
+        <div className="bg-green-900/50 rounded-lg p-6 shadow-md mb-6">
+          <h2 className="text-xl font-semibold text-neutral-100 mb-4">Recent Match Results</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {recentResults.map(result => (
                 <div key={result.id} className="bg-green-900/30 p-4 rounded-md shadow-sm">
                   <div className="text-sm text-neutral-300 font-medium mb-1">{result.tournament}</div>
@@ -270,10 +212,16 @@ const Dashboard: FC = () => {
               ))}
             </div>
           </div>
+
+          {/* Third row - Player Profiles */}
+          <Link to="/players" className="block group mt-6">
+            <div className="group-hover:bg-green-900/20 group-hover:rounded-lg transition-colors">
+              <PlayerCarousel />
+            </div>
+          </Link>
         </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default Dashboard; 
