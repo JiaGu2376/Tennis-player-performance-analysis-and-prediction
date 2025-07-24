@@ -2,8 +2,30 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@font-face {
+  font-family: 'TT Commons';
+  src: url('./assets/TT Commons Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'TT Commons';
+  src: url('./assets/TT Commons Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'TT Commons';
+  src: url('./assets/TT Commons Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'TT Commons', sans-serif;
   line-height: 1.5;
   font-weight: 400;
 }
@@ -12,6 +34,8 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  background: #F3F3F3;
+  color: #0C0C0C;
 }
 
 #root {

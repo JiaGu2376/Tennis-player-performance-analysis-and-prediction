@@ -50,7 +50,7 @@ const PlayerProfile: FC = () => {
 
   if (!player) {
     return (
-      <div className="min-h-screen w-full bg-green-800 text-neutral-100 flex items-center justify-center">
+      <div className="min-h-screen w-full bg-background text-text flex items-center justify-center">
         <div className="max-w-2xl mx-auto p-8 text-center">
           <h2 className="text-2xl font-bold mb-4">Player Not Found</h2>
           <Link to="/" className="text-green-400 hover:underline">Back to Dashboard</Link>
@@ -60,22 +60,30 @@ const PlayerProfile: FC = () => {
   }
 
   return (
-    <div className="min-h-screen w-full bg-green-800 text-neutral-100">
+    <div className="min-h-screen w-full bg-background text-text">
       <div className="max-w-2xl mx-auto p-8">
+        <div className="mb-6 flex items-center justify-between">
+          <button
+            onClick={() => window.location.href = '/players'}
+            className="bg-green-700 hover:bg-green-600 text-neutral-100 px-4 py-2 rounded font-medium shadow transition"
+          >
+            ← Back to Player Rankings
+          </button>
+        </div>
         <div className="flex items-center space-x-6 mb-6">
           <img src={player.image} alt={player.name} className="w-24 h-24 rounded-full object-cover border-4 border-green-400" />
           <div>
-            <h2 className="text-3xl font-bold text-neutral-100 mb-1">{player.name}</h2>
-            <div className="text-green-300 font-semibold mb-1">Rank #{player.rank}</div>
-            <div className="text-neutral-300">Win Rate: <span className="font-medium">{player.winRate}%</span></div>
+            <h2 className="text-5xl font-medium mb-1 font-ttcommons">{player.name}</h2>
+            <div className="mb-1">Rank #{player.rank}</div>
+            <div className="">Win Rate: <span className="font-medium">{player.winRate}%</span></div>
           </div>
         </div>
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-neutral-100 mb-2">Bio</h3>
-          <p className="text-neutral-200">{player.bio}</p>
+          <h3 className="text-xl font-semibold mb-2">Bio</h3>
+          <p className="text-text">{player.bio}</p>
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-neutral-100 mb-2">Recent Matches</h3>
+          <h3 className="text-xl font-semibold mb-2">Recent Matches</h3>
           <div className="space-y-2">
             {player.recentMatches.map((match: any, idx: number) => (
               <div key={idx} className="bg-green-900/40 p-3 rounded flex flex-col md:flex-row md:justify-between md:items-center">
