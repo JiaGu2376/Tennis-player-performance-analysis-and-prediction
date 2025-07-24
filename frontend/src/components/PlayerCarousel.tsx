@@ -193,7 +193,6 @@ const PlayerCarousel: FC<PlayerCarouselProps> = ({ tour = 'ATP' }) => {
 
   return (
     <div className="relative bg-green-900/50 rounded-lg p-6 shadow-md group">
-      <h2 className="text-xl font-semibold text-neutral-100 mb-4">Player Profiles</h2>
       <div className="relative">
         {/* Navigation Buttons */}
         <button

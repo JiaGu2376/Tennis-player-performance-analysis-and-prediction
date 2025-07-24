@@ -370,10 +370,9 @@ const Dashboard: FC = () => {
             </div>
           </div>
 
-          {/* Third row - Player Profiles */}
           <div className="mt-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-neutral-100">Featured Players</h2>
+              <h2 className="text-xl font-semibold">Featured Players</h2>
               <div className="flex items-center space-x-4">
                 <div className="flex space-x-2">
                   <button
