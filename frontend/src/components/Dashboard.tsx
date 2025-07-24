@@ -3,6 +3,17 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PlayerCarousel from './PlayerCarousel';
 
+interface Player {
+  name: string;
+  image: string;
+  rank: number;
+  winRate: number;
+  tour: 'ATP' | 'WTA';
+  country: string;
+  points: number;
+  bio: string;
+}
+
 interface MatchPrediction {
   id: string;
   player1: string;
@@ -12,6 +23,9 @@ interface MatchPrediction {
   predictedWinner: string;
   confidence: number;
   matchTime: string;
+  tour: 'ATP' | 'WTA';
+  matchType: 'Singles' | 'Doubles';
+  tournament: string;
 }
 
 interface UpcomingMatch {
@@ -23,6 +37,12 @@ interface UpcomingMatch {
   tournament: string;
   round: string;
   dateTime: string;
+  tour: 'ATP' | 'WTA';
+  matchType: 'Singles' | 'Doubles';
+  player1Partner?: string;
+  player2Partner?: string;
+  player1PartnerImage?: string;
+  player2PartnerImage?: string;
 }
 
 interface MatchResult {
@@ -34,9 +54,12 @@ interface MatchResult {
   score: string;
   tournament: string;
   date: string;
+  tour: 'ATP' | 'WTA';
+  matchType: 'Singles' | 'Doubles';
 }
 
 const Dashboard: FC = () => {
+  const [selectedTour, setSelectedTour] = useState<'ATP' | 'WTA'>('ATP');
   // Player images from Wikimedia Commons
   const playerImages: { [key: string]: string } = {
     'Novak Djokovic': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Novak_Djokovic_Queen%27s_Club_2018.jpg/200px-Novak_Djokovic_Queen%27s_Club_2018.jpg',
@@ -82,7 +105,10 @@ const Dashboard: FC = () => {
       player2Image: playerImages['Carlos Alcaraz'] || defaultPlayerImage,
       predictedWinner: 'Novak Djokovic',
       confidence: 75,
-      matchTime: '2024-03-20T15:00:00Z'
+      matchTime: '2024-03-20T15:00:00Z',
+      tour: 'ATP',
+      matchType: 'Singles',
+      tournament: 'Miami Open'
     },
     // Add more predictions...
   ];
@@ -96,7 +122,9 @@ const Dashboard: FC = () => {
       player2Image: playerImages['Daniil Medvedev'] || defaultPlayerImage,
       tournament: 'Miami Open',
       round: 'Semi Final',
-      dateTime: '2024-03-21T18:00:00Z'
+      dateTime: '2024-03-21T18:00:00Z',
+      tour: 'ATP',
+      matchType: 'Singles'
     },
     // Add more matches...
   ];
@@ -110,23 +138,54 @@ const Dashboard: FC = () => {
       loserImage: playerImages['Daniil Medvedev'] || defaultPlayerImage,
       score: '6-4, 6-4',
       tournament: 'Indian Wells',
-      date: '2024-03-17T00:00:00Z'
+      date: '2024-03-17T00:00:00Z',
+      tour: 'ATP',
+      matchType: 'Singles'
     },
     // Add more results...
   ];
+
+  // Tour selector component
+  const TourSelector = () => (
+    <div className="flex justify-center space-x-4 mb-6">
+      <button
+        onClick={() => setSelectedTour('ATP')}
+        className={`px-4 py-2 rounded-full ${
+          selectedTour === 'ATP'
+            ? 'bg-blue-600 text-white'
+            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+        }`}
+      >
+        ATP Tour
+      </button>
+      <button
+        onClick={() => setSelectedTour('WTA')}
+        className={`px-4 py-2 rounded-full ${
+          selectedTour === 'WTA'
+            ? 'bg-pink-600 text-white'
+            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+        }`}
+      >
+        WTA Tour
+      </button>
+    </div>
+  );
 
   return (
     <div className="min-h-screen w-full bg-background text-text">
       <div className="max-w-7xl mx-auto p-6">
         <h1 className="text-6xl font-medium font-ttcommons mb-8">Tennis Performance Dashboard</h1>
+        
+        {/* Tour Selector */}
+        <TourSelector />
 
         {/* Top row - Predictions and Matches */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Latest Predictions */}
           <div className="bg-green-900/50 rounded-lg p-6 shadow-md md:col-span-1">
-            <h2 className="text-xl font-semibold text-neutral-100 mb-4">Latest Predictions</h2>
+            <h2 className="text-xl font-semibold text-neutral-100 mb-4">{selectedTour} Latest Predictions</h2>
             <div className="space-y-4">
-              {predictions.map(pred => (
+              {predictions.filter(pred => pred.tour === selectedTour).map(pred => (
                 <div key={pred.id} className="bg-green-900/30 p-4 rounded-md shadow-sm">
                   <div className="flex justify-between items-center mb-2">
                     <div className="flex items-center space-x-4">
@@ -158,9 +217,9 @@ const Dashboard: FC = () => {
 
           {/* Upcoming Matches */}
           <div className="bg-green-900/50 rounded-lg p-6 shadow-md md:col-span-1">
-            <h2 className="text-xl font-semibold text-neutral-100 mb-4">Upcoming Matches</h2>
+            <h2 className="text-xl font-semibold text-neutral-100 mb-4">{selectedTour} Upcoming Matches</h2>
             <div className="space-y-4">
-              {upcomingMatches.map(match => (
+              {upcomingMatches.filter(match => match.tour === selectedTour).map(match => (
                 <div key={match.id} className="bg-green-900/30 p-4 rounded-md shadow-sm">
                   <div className="text-sm text-neutral-300 font-medium mb-1">{match.tournament}</div>
                   <div className="flex items-center space-x-2 mb-2">
@@ -184,9 +243,9 @@ const Dashboard: FC = () => {
 
         {/* Second row - Recent Results */}
         <div className="bg-green-900/50 rounded-lg p-6 shadow-md mb-6">
-          <h2 className="text-xl font-semibold text-neutral-100 mb-4">Recent Match Results</h2>
+          <h2 className="text-xl font-semibold text-neutral-100 mb-4">{selectedTour} Recent Match Results</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {recentResults.map(result => (
+              {recentResults.filter(result => result.tour === selectedTour).map(result => (
                 <div key={result.id} className="bg-green-900/30 p-4 rounded-md shadow-sm">
                   <div className="text-sm text-neutral-300 font-medium mb-1">{result.tournament}</div>
                   <div className="flex items-center space-x-2 mb-2">
@@ -216,7 +275,7 @@ const Dashboard: FC = () => {
           {/* Third row - Player Profiles */}
           <Link to="/players" className="block group mt-6">
             <div className="group-hover:bg-green-900/20 group-hover:rounded-lg transition-colors">
-              <PlayerCarousel />
+              <PlayerCarousel tour={selectedTour} />
             </div>
           </Link>
         </div>
