@@ -126,7 +126,48 @@ const Dashboard: FC = () => {
       tour: 'ATP',
       matchType: 'Singles'
     },
-    // Add more matches...
+    {
+      id: '2',
+      player1: 'Iga Świątek',
+      player2: 'Aryna Sabalenka',
+      player1Image: playerImages['Iga Świątek'] || defaultPlayerImage,
+      player2Image: playerImages['Aryna Sabalenka'] || defaultPlayerImage,
+      tournament: 'Miami Open',
+      round: 'Quarter Final',
+      dateTime: '2024-03-21T20:00:00Z',
+      tour: 'WTA',
+      matchType: 'Singles'
+    },
+    {
+      id: '3',
+      player1: 'Novak Djokovic',
+      player2: 'Carlos Alcaraz',
+      player1Partner: 'Jannik Sinner',
+      player2Partner: 'Daniil Medvedev',
+      player1Image: playerImages['Novak Djokovic'] || defaultPlayerImage,
+      player2Image: playerImages['Carlos Alcaraz'] || defaultPlayerImage,
+      player1PartnerImage: playerImages['Jannik Sinner'] || defaultPlayerImage,
+      player2PartnerImage: playerImages['Daniil Medvedev'] || defaultPlayerImage,
+      tournament: 'Miami Open',
+      round: 'Doubles Quarter Final',
+      dateTime: '2024-03-22T16:00:00Z',
+      tour: 'ATP',
+      matchType: 'Doubles'
+    },
+    {
+      id: '4',
+      player1: 'Coco Gauff',
+      player2: 'Jessica Pegula',
+      player1Partner: 'Ons Jabeur',
+      player2Partner: 'Maria Sakkari',
+      player1Image: playerImages['Coco Gauff'] || defaultPlayerImage,
+      player2Image: playerImages['Jessica Pegula'] || defaultPlayerImage,
+      tournament: 'Miami Open',
+      round: 'Doubles Semi Final',
+      dateTime: '2024-03-22T18:00:00Z',
+      tour: 'WTA',
+      matchType: 'Doubles'
+    }
   ];
 
   const recentResults: MatchResult[] = [
@@ -145,60 +186,44 @@ const Dashboard: FC = () => {
     // Add more results...
   ];
 
-  // Tour selector component
-  const TourSelector = () => (
-    <div className="flex justify-center space-x-4 mb-6">
-      <button
-        onClick={() => setSelectedTour('ATP')}
-        className={`px-4 py-2 rounded-full ${
-          selectedTour === 'ATP'
-            ? 'bg-blue-600 text-white'
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }`}
-      >
-        ATP Tour
-      </button>
-      <button
-        onClick={() => setSelectedTour('WTA')}
-        className={`px-4 py-2 rounded-full ${
-          selectedTour === 'WTA'
-            ? 'bg-pink-600 text-white'
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }`}
-      >
-        WTA Tour
-      </button>
-    </div>
-  );
+
 
   return (
     <div className="min-h-screen w-full bg-background text-text">
       <div className="max-w-7xl mx-auto p-6">
         <h1 className="text-6xl font-medium font-ttcommons mb-8">Tennis Performance Dashboard</h1>
         
-        {/* Tour Selector */}
-        <TourSelector />
-
         {/* Top row - Predictions and Matches */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Latest Predictions */}
           <div className="bg-green-900/50 rounded-lg p-6 shadow-md md:col-span-1">
-            <h2 className="text-xl font-semibold text-neutral-100 mb-4">{selectedTour} Latest Predictions</h2>
+            <h2 className="text-xl font-semibold text-neutral-100 mb-4">Latest Predictions</h2>
             <div className="space-y-4">
-              {predictions.filter(pred => pred.tour === selectedTour).map(pred => (
+              {predictions.map(pred => (
                 <div key={pred.id} className="bg-green-900/30 p-4 rounded-md shadow-sm">
-                  <div className="flex justify-between items-center mb-2">
+                  <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center space-x-4">
                       <div className="flex items-center">
                         <PlayerImage src={pred.player1Image} alt={pred.player1} className="w-8 h-8 rounded-full" />
                         <span className="mx-2 text-neutral-200">vs</span>
                         <PlayerImage src={pred.player2Image} alt={pred.player2} className="w-8 h-8 rounded-full" />
                       </div>
-                      <span className="font-medium text-neutral-100">
-                        <Link to={`/player/${encodeURIComponent(pred.player1)}`} className="hover:underline text-green-300">{pred.player1}</Link> vs <Link to={`/player/${encodeURIComponent(pred.player2)}`} className="hover:underline text-green-300">{pred.player2}</Link>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className={`px-2 py-0.5 text-xs rounded-full ${
+                        pred.matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
+                      }`}>
+                        {pred.matchType}
+                      </span>
+                      <span className={`px-2 py-0.5 text-xs rounded-full ${
+                        pred.tour === 'ATP' ? 'bg-blue-600/20 text-blue-300' : 'bg-pink-600/20 text-pink-300'
+                      }`}>
+                        {pred.tour}
                       </span>
                     </div>
-                    <span className="text-sm text-neutral-300">{new Date(pred.matchTime).toLocaleDateString()}</span>
+                  </div>
+                  <div className="font-medium text-neutral-100 mb-2">
+                    <Link to={`/player/${encodeURIComponent(pred.player1)}`} className="hover:underline text-green-300">{pred.player1}</Link> vs <Link to={`/player/${encodeURIComponent(pred.player2)}`} className="hover:underline text-green-300">{pred.player2}</Link>
                   </div>
                   <div className="text-sm text-neutral-300">
                     Predicted Winner: <Link to={`/player/${encodeURIComponent(pred.predictedWinner)}`} className="font-medium text-green-300 hover:underline">{pred.predictedWinner}</Link>
@@ -217,19 +242,78 @@ const Dashboard: FC = () => {
 
           {/* Upcoming Matches */}
           <div className="bg-green-900/50 rounded-lg p-6 shadow-md md:col-span-1">
-            <h2 className="text-xl font-semibold text-neutral-100 mb-4">{selectedTour} Upcoming Matches</h2>
+            <h2 className="text-xl font-semibold text-neutral-100 mb-4">Upcoming Matches</h2>
             <div className="space-y-4">
-              {upcomingMatches.filter(match => match.tour === selectedTour).map(match => (
+              {upcomingMatches.map(match => (
                 <div key={match.id} className="bg-green-900/30 p-4 rounded-md shadow-sm">
-                  <div className="text-sm text-neutral-300 font-medium mb-1">{match.tournament}</div>
-                  <div className="flex items-center space-x-2 mb-2">
-                    <PlayerImage src={match.player1Image} alt={match.player1} className="w-8 h-8 rounded-full" />
-                    <span className="font-medium text-neutral-200">vs</span>
-                    <PlayerImage src={match.player2Image} alt={match.player2} className="w-8 h-8 rounded-full" />
+                  <div className="flex justify-between items-start">
+                    <div className="text-sm text-neutral-300 font-medium mb-1">{match.tournament}</div>
+                    <div className="flex gap-2">
+                      <span className={`px-2 py-0.5 text-xs rounded-full ${
+                        match.matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
+                      }`}>
+                        {match.matchType}
+                      </span>
+                      <span className={`px-2 py-0.5 text-xs rounded-full ${
+                        match.tour === 'ATP' ? 'bg-blue-600/20 text-blue-300' : 'bg-pink-600/20 text-pink-300'
+                      }`}>
+                        {match.tour}
+                      </span>
+                    </div>
                   </div>
-                  <div className="font-medium text-neutral-100">
-                    <Link to={`/player/${encodeURIComponent(match.player1)}`} className="hover:underline text-green-300">{match.player1}</Link> vs <Link to={`/player/${encodeURIComponent(match.player2)}`} className="hover:underline text-green-300">{match.player2}</Link>
-                  </div>
+                  {match.matchType === 'Singles' ? (
+                    <>
+                      <div className="flex items-center space-x-2 mb-2">
+                        <PlayerImage src={match.player1Image} alt={match.player1} className="w-8 h-8 rounded-full" />
+                        <span className="font-medium text-neutral-200">vs</span>
+                        <PlayerImage src={match.player2Image} alt={match.player2} className="w-8 h-8 rounded-full" />
+                      </div>
+                      <div className="font-medium text-neutral-100">
+                        <Link to={`/player/${encodeURIComponent(match.player1)}`} className="hover:underline text-green-300">{match.player1}</Link>
+                        <span className="mx-2">vs</span>
+                        <Link to={`/player/${encodeURIComponent(match.player2)}`} className="hover:underline text-green-300">{match.player2}</Link>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex items-center space-x-2 mb-2">
+                        <div className="flex -space-x-2">
+                          <PlayerImage src={match.player1Image} alt={match.player1} className="w-8 h-8 rounded-full" />
+                          {match.player1PartnerImage && (
+                            <PlayerImage src={match.player1PartnerImage} alt={match.player1Partner || ''} className="w-8 h-8 rounded-full" />
+                          )}
+                        </div>
+                        <span className="font-medium text-neutral-200">vs</span>
+                        <div className="flex -space-x-2">
+                          <PlayerImage src={match.player2Image} alt={match.player2} className="w-8 h-8 rounded-full" />
+                          {match.player2PartnerImage && (
+                            <PlayerImage src={match.player2PartnerImage} alt={match.player2Partner || ''} className="w-8 h-8 rounded-full" />
+                          )}
+                        </div>
+                      </div>
+                      <div className="font-medium text-neutral-100">
+                        <div>
+                          <Link to={`/player/${encodeURIComponent(match.player1)}`} className="hover:underline text-green-300">{match.player1}</Link>
+                          {match.player1Partner && (
+                            <>
+                              <span className="mx-1">/</span>
+                              <Link to={`/player/${encodeURIComponent(match.player1Partner)}`} className="hover:underline text-green-300">{match.player1Partner}</Link>
+                            </>
+                          )}
+                        </div>
+                        <div className="text-sm text-neutral-300">vs</div>
+                        <div>
+                          <Link to={`/player/${encodeURIComponent(match.player2)}`} className="hover:underline text-green-300">{match.player2}</Link>
+                          {match.player2Partner && (
+                            <>
+                              <span className="mx-1">/</span>
+                              <Link to={`/player/${encodeURIComponent(match.player2Partner)}`} className="hover:underline text-green-300">{match.player2Partner}</Link>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
                   <div className="text-sm text-neutral-300 mt-1">
                     <span>{match.round}</span>
                     <span className="mx-2">•</span>
@@ -243,11 +327,25 @@ const Dashboard: FC = () => {
 
         {/* Second row - Recent Results */}
         <div className="bg-green-900/50 rounded-lg p-6 shadow-md mb-6">
-          <h2 className="text-xl font-semibold text-neutral-100 mb-4">{selectedTour} Recent Match Results</h2>
+          <h2 className="text-xl font-semibold text-neutral-100 mb-4">Recent Match Results</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {recentResults.filter(result => result.tour === selectedTour).map(result => (
+              {recentResults.map(result => (
                 <div key={result.id} className="bg-green-900/30 p-4 rounded-md shadow-sm">
-                  <div className="text-sm text-neutral-300 font-medium mb-1">{result.tournament}</div>
+                  <div className="flex justify-between items-start">
+                    <div className="text-sm text-neutral-300 font-medium mb-1">{result.tournament}</div>
+                    <div className="flex gap-2">
+                      <span className={`px-2 py-0.5 text-xs rounded-full ${
+                        result.matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
+                      }`}>
+                        {result.matchType}
+                      </span>
+                      <span className={`px-2 py-0.5 text-xs rounded-full ${
+                        result.tour === 'ATP' ? 'bg-blue-600/20 text-blue-300' : 'bg-pink-600/20 text-pink-300'
+                      }`}>
+                        {result.tour}
+                      </span>
+                    </div>
+                  </div>
                   <div className="flex items-center space-x-2 mb-2">
                     <PlayerImage src={result.winnerImage} alt={result.winner} className="w-8 h-8 rounded-full" />
                     <span className="text-xs text-neutral-400">def.</span>
@@ -273,11 +371,41 @@ const Dashboard: FC = () => {
           </div>
 
           {/* Third row - Player Profiles */}
-          <Link to="/players" className="block group mt-6">
+          <div className="mt-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-neutral-100">Featured Players</h2>
+              <div className="flex items-center space-x-4">
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => setSelectedTour('ATP')}
+                    className={`px-3 py-1 text-sm rounded-full transition ${
+                      selectedTour === 'ATP'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    ATP
+                  </button>
+                  <button
+                    onClick={() => setSelectedTour('WTA')}
+                    className={`px-3 py-1 text-sm rounded-full transition ${
+                      selectedTour === 'WTA'
+                        ? 'bg-pink-600 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    WTA
+                  </button>
+                </div>
+                <Link to="/players" className="px-4 py-2 rounded-full bg-green-600/20 text-green-300 hover:bg-green-600/30 transition">
+                  View All Rankings
+                </Link>
+              </div>
+            </div>
             <div className="group-hover:bg-green-900/20 group-hover:rounded-lg transition-colors">
               <PlayerCarousel tour={selectedTour} />
             </div>
-          </Link>
+          </div>
         </div>
       </div>
     );
