@@ -33,7 +33,7 @@ export default {
       },
       fontFamily: {
         ttcommons: ['TT Commons', 'sans-serif'],
-        sans: ['Inter', 'sans-serif'],
+        sans: ['TT Commons', 'sans-serif'],
       },
     },
   },
