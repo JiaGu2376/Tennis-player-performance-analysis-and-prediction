@@ -211,7 +211,7 @@ const PlayerCarousel: FC<PlayerCarouselProps> = ({ tour = 'ATP' }) => {
         </button>
 
         {/* Player Cards Container */}
-        <div ref={containerRef} className="overflow-x-auto flex gap-4 pb-2 snap-x snap-mandatory">
+        <div ref={containerRef} className="overflow-x-auto flex gap-4 pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {players.map(player => (
             <div key={player.name} className="bg-green-900/30 p-4 rounded-md shadow-sm flex-none w-[300px] snap-start">
               <div className="flex items-center space-x-3">

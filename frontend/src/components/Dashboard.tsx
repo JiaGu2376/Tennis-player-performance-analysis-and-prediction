@@ -60,6 +60,11 @@ interface MatchResult {
 
 const Dashboard: FC = () => {
   const [selectedTour, setSelectedTour] = useState<'ATP' | 'WTA'>('ATP');
+  const [selectedPredictionIndex, setSelectedPredictionIndex] = useState(0);
+  const [selectedUpcomingMatchIndex, setSelectedUpcomingMatchIndex] = useState(0);
+  const [selectedResultIndex, setSelectedResultIndex] = useState(0);
+  const [selectedFeaturedPlayerIndex, setSelectedFeaturedPlayerIndex] = useState(0);
+
   // Player images from Wikimedia Commons
   const playerImages: { [key: string]: string } = {
     'Novak Djokovic': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Novak_Djokovic_Queen%27s_Club_2018.jpg/200px-Novak_Djokovic_Queen%27s_Club_2018.jpg',
@@ -186,228 +191,246 @@ const Dashboard: FC = () => {
     // Add more results...
   ];
 
-
+  const handleNavigation = (currentIndex: number, setIndex: (index: number) => void, items: any[], direction: 'prev' | 'next') => {
+    if (direction === 'prev') {
+      setIndex((currentIndex - 1 + items.length) % items.length);
+    } else {
+      setIndex((currentIndex + 1) % items.length);
+    }
+  };
 
   return (
     <div className="min-h-screen w-full bg-background text-text">
       <div className="max-w-7xl mx-auto p-6">
         <h1 className="text-6xl font-medium font-ttcommons mb-8">Tennis Performance Dashboard</h1>
-        
-        {/* Top row - Predictions and Matches */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Latest Predictions */}
-          <div className="bg-green-900/50 rounded-lg p-6 shadow-md md:col-span-1">
+          <div className="relative bg-green-900/50 rounded-lg p-6 shadow-md">
             <h2 className="text-xl font-semibold text-neutral-100 mb-4">Latest Predictions</h2>
-            <div className="space-y-4">
-              {predictions.map(pred => (
-                <div key={pred.id} className="bg-green-900/30 p-4 rounded-md shadow-sm">
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center">
-                        <PlayerImage src={pred.player1Image} alt={pred.player1} className="w-8 h-8 rounded-full" />
-                        <span className="mx-2 text-neutral-200">vs</span>
-                        <PlayerImage src={pred.player2Image} alt={pred.player2} className="w-8 h-8 rounded-full" />
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <span className={`px-2 py-0.5 text-xs rounded-full ${
-                        pred.matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
-                      }`}>
-                        {pred.matchType}
-                      </span>
-                      <span className={`px-2 py-0.5 text-xs rounded-full ${
-                        pred.tour === 'ATP' ? 'bg-blue-600/20 text-blue-300' : 'bg-pink-600/20 text-pink-300'
-                      }`}>
-                        {pred.tour}
-                      </span>
-                    </div>
+            <div className="flex items-center justify-center group">
+              <button
+                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 rounded-full p-2 hover:bg-neutral-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => handleNavigation(selectedPredictionIndex, setSelectedPredictionIndex, predictions, 'prev')}
+              >
+                ◀
+              </button>
+              <div className="bg-green-900/30 p-4 rounded-md shadow-sm w-[350px]">
+                <div className="flex justify-between items-start mb-2">
+                  <div className="flex items-center space-x-4">
+                    <PlayerImage src={predictions[selectedPredictionIndex].player1Image} alt={predictions[selectedPredictionIndex].player1} className="w-8 h-8 rounded-full" />
+                    <span className="mx-2 text-neutral-200">vs</span>
+                    <PlayerImage src={predictions[selectedPredictionIndex].player2Image} alt={predictions[selectedPredictionIndex].player2} className="w-8 h-8 rounded-full" />
                   </div>
-                  <div className="font-medium text-neutral-100 mb-2">
-                    <Link to={`/player/${encodeURIComponent(pred.player1)}`} className="hover:underline text-green-300">{pred.player1}</Link> vs <Link to={`/player/${encodeURIComponent(pred.player2)}`} className="hover:underline text-green-300">{pred.player2}</Link>
-                  </div>
-                  <div className="text-sm text-neutral-300">
-                    Predicted Winner: <Link to={`/player/${encodeURIComponent(pred.predictedWinner)}`} className="font-medium text-green-300 hover:underline">{pred.predictedWinner}</Link>
-                    <div className="mt-1 bg-green-950/50 rounded-full h-2">
-                      <div 
-                        className="bg-neutral-100 h-2 rounded-full" 
-                        style={{ width: `${pred.confidence}%` }}
-                      />
-                    </div>
-                    <span className="text-xs text-neutral-400">{pred.confidence}% confidence</span>
+                  <div className="flex gap-2">
+                    <span className={`px-2 py-0.5 text-xs rounded-full ${
+                      predictions[selectedPredictionIndex].matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
+                    }`}>
+                      {predictions[selectedPredictionIndex].matchType}
+                    </span>
+                    <span className={`px-2 py-0.5 text-xs rounded-full ${
+                      predictions[selectedPredictionIndex].tour === 'ATP' ? 'bg-blue-600/20 text-blue-300' : 'bg-pink-600/20 text-pink-300'
+                    }`}>
+                      {predictions[selectedPredictionIndex].tour}
+                    </span>
                   </div>
                 </div>
-              ))}
+                <div className="font-medium text-neutral-100 mb-2">
+                  <Link to={`/player/${encodeURIComponent(predictions[selectedPredictionIndex].player1)}`} className="hover:underline text-green-300">{predictions[selectedPredictionIndex].player1}</Link> vs <Link to={`/player/${encodeURIComponent(predictions[selectedPredictionIndex].player2)}`} className="hover:underline text-green-300">{predictions[selectedPredictionIndex].player2}</Link>
+                </div>
+                <div className="text-sm text-neutral-300">
+                  Predicted Winner: <Link to={`/player/${encodeURIComponent(predictions[selectedPredictionIndex].predictedWinner)}`} className="font-medium text-green-300 hover:underline">{predictions[selectedPredictionIndex].predictedWinner}</Link>
+                  <div className="mt-1 bg-green-950/50 rounded-full h-2">
+                    <div 
+                      className="bg-neutral-100 h-2 rounded-full" 
+                      style={{ width: `${predictions[selectedPredictionIndex].confidence}%` }}
+                    />
+                  </div>
+                  <span className="text-xs text-neutral-400">{predictions[selectedPredictionIndex].confidence}% confidence</span>
+                </div>
+              </div>
+              <button
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 rounded-full p-2 hover:bg-neutral-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => handleNavigation(selectedPredictionIndex, setSelectedPredictionIndex, predictions, 'next')}
+              >
+                ▶
+              </button>
             </div>
           </div>
 
           {/* Upcoming Matches */}
-          <div className="bg-green-900/50 rounded-lg p-6 shadow-md md:col-span-1">
+          <div className="relative bg-green-900/50 rounded-lg p-6 shadow-md">
             <h2 className="text-xl font-semibold text-neutral-100 mb-4">Upcoming Matches</h2>
-            <div className="space-y-4">
-              {upcomingMatches.map(match => (
-                <div key={match.id} className="bg-green-900/30 p-4 rounded-md shadow-sm">
-                  <div className="flex justify-between items-start">
-                    <div className="text-sm text-neutral-300 font-medium mb-1">{match.tournament}</div>
-                    <div className="flex gap-2">
-                      <span className={`px-2 py-0.5 text-xs rounded-full ${
-                        match.matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
-                      }`}>
-                        {match.matchType}
-                      </span>
-                      <span className={`px-2 py-0.5 text-xs rounded-full ${
-                        match.tour === 'ATP' ? 'bg-blue-600/20 text-blue-300' : 'bg-pink-600/20 text-pink-300'
-                      }`}>
-                        {match.tour}
-                      </span>
-                    </div>
-                  </div>
-                  {match.matchType === 'Singles' ? (
-                    <>
-                      <div className="flex items-center space-x-2 mb-2">
-                        <PlayerImage src={match.player1Image} alt={match.player1} className="w-8 h-8 rounded-full" />
-                        <span className="font-medium text-neutral-200">vs</span>
-                        <PlayerImage src={match.player2Image} alt={match.player2} className="w-8 h-8 rounded-full" />
-                      </div>
-                      <div className="font-medium text-neutral-100">
-                        <Link to={`/player/${encodeURIComponent(match.player1)}`} className="hover:underline text-green-300">{match.player1}</Link>
-                        <span className="mx-2">vs</span>
-                        <Link to={`/player/${encodeURIComponent(match.player2)}`} className="hover:underline text-green-300">{match.player2}</Link>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="flex items-center space-x-2 mb-2">
-                        <div className="flex -space-x-2">
-                          <PlayerImage src={match.player1Image} alt={match.player1} className="w-8 h-8 rounded-full" />
-                          {match.player1PartnerImage && (
-                            <PlayerImage src={match.player1PartnerImage} alt={match.player1Partner || ''} className="w-8 h-8 rounded-full" />
-                          )}
-                        </div>
-                        <span className="font-medium text-neutral-200">vs</span>
-                        <div className="flex -space-x-2">
-                          <PlayerImage src={match.player2Image} alt={match.player2} className="w-8 h-8 rounded-full" />
-                          {match.player2PartnerImage && (
-                            <PlayerImage src={match.player2PartnerImage} alt={match.player2Partner || ''} className="w-8 h-8 rounded-full" />
-                          )}
-                        </div>
-                      </div>
-                      <div className="font-medium text-neutral-100">
-                        <div>
-                          <Link to={`/player/${encodeURIComponent(match.player1)}`} className="hover:underline text-green-300">{match.player1}</Link>
-                          {match.player1Partner && (
-                            <>
-                              <span className="mx-1">/</span>
-                              <Link to={`/player/${encodeURIComponent(match.player1Partner)}`} className="hover:underline text-green-300">{match.player1Partner}</Link>
-                            </>
-                          )}
-                        </div>
-                        <div className="text-sm text-neutral-300">vs</div>
-                        <div>
-                          <Link to={`/player/${encodeURIComponent(match.player2)}`} className="hover:underline text-green-300">{match.player2}</Link>
-                          {match.player2Partner && (
-                            <>
-                              <span className="mx-1">/</span>
-                              <Link to={`/player/${encodeURIComponent(match.player2Partner)}`} className="hover:underline text-green-300">{match.player2Partner}</Link>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                  <div className="text-sm text-neutral-300 mt-1">
-                    <span>{match.round}</span>
-                    <span className="mx-2">•</span>
-                    <span>{new Date(match.dateTime).toLocaleString()}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Second row - Recent Results */}
-        <div className="bg-green-900/50 rounded-lg p-6 shadow-md mb-6">
-          <h2 className="text-xl font-semibold text-neutral-100 mb-4">Recent Match Results</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {recentResults.map(result => (
-                <div key={result.id} className="bg-green-900/30 p-4 rounded-md shadow-sm">
-                  <div className="flex justify-between items-start">
-                    <div className="text-sm text-neutral-300 font-medium mb-1">{result.tournament}</div>
-                    <div className="flex gap-2">
-                      <span className={`px-2 py-0.5 text-xs rounded-full ${
-                        result.matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
-                      }`}>
-                        {result.matchType}
-                      </span>
-                      <span className={`px-2 py-0.5 text-xs rounded-full ${
-                        result.tour === 'ATP' ? 'bg-blue-600/20 text-blue-300' : 'bg-pink-600/20 text-pink-300'
-                      }`}>
-                        {result.tour}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2 mb-2">
-                    <PlayerImage src={result.winnerImage} alt={result.winner} className="w-8 h-8 rounded-full" />
-                    <span className="text-xs text-neutral-400">def.</span>
-                    <PlayerImage src={result.loserImage} alt={result.loser} className="w-8 h-8 rounded-full" />
-                  </div>
-                  <div>
-                    <span className="font-medium text-neutral-100">
-                      <Link to={`/player/${encodeURIComponent(result.winner)}`} className="hover:underline text-green-300">{result.winner}</Link>
+            <div className="flex items-center justify-center group">
+              <button
+                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 rounded-full p-2 hover:bg-neutral-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => handleNavigation(selectedUpcomingMatchIndex, setSelectedUpcomingMatchIndex, upcomingMatches, 'prev')}
+              >
+                ◀
+              </button>
+              <div className="bg-green-900/30 p-4 rounded-md shadow-sm w-[350px]">
+                <div className="flex justify-between items-start">
+                  <div className="text-sm text-neutral-300 font-medium mb-1">{upcomingMatches[selectedUpcomingMatchIndex].tournament}</div>
+                  <div className="flex gap-2">
+                    <span className={`px-2 py-0.5 text-xs rounded-full ${
+                      upcomingMatches[selectedUpcomingMatchIndex].matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
+                    }`}>
+                      {upcomingMatches[selectedUpcomingMatchIndex].matchType}
                     </span>
-                    <span className="text-neutral-300"> def. </span>
-                    <span className="font-medium text-neutral-200">
-                      <Link to={`/player/${encodeURIComponent(result.loser)}`} className="hover:underline text-green-300">{result.loser}</Link>
+                    <span className={`px-2 py-0.5 text-xs rounded-full ${
+                      upcomingMatches[selectedUpcomingMatchIndex].tour === 'ATP' ? 'bg-blue-600/20 text-blue-300' : 'bg-pink-600/20 text-pink-300'
+                    }`}>
+                      {upcomingMatches[selectedUpcomingMatchIndex].tour}
                     </span>
                   </div>
-                  <div className="text-sm text-neutral-300 mt-1">
-                    <span>{result.score}</span>
-                    <span className="mx-2">•</span>
-                    <span>{new Date(result.date).toLocaleDateString()}</span>
-                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Featured Players</h2>
-              <div className="flex items-center space-x-4">
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => setSelectedTour('ATP')}
-                    className={`px-3 py-1 text-sm rounded-full transition ${
-                      selectedTour === 'ATP'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    ATP
-                  </button>
-                  <button
-                    onClick={() => setSelectedTour('WTA')}
-                    className={`px-3 py-1 text-sm rounded-full transition ${
-                      selectedTour === 'WTA'
-                        ? 'bg-pink-600 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    WTA
-                  </button>
+                {upcomingMatches[selectedUpcomingMatchIndex].matchType === 'Singles' ? (
+                  <>
+                    <div className="flex items-center space-x-2 mb-2">
+                      <PlayerImage src={upcomingMatches[selectedUpcomingMatchIndex].player1Image} alt={upcomingMatches[selectedUpcomingMatchIndex].player1} className="w-8 h-8 rounded-full" />
+                      <span className="font-medium text-neutral-200">vs</span>
+                      <PlayerImage src={upcomingMatches[selectedUpcomingMatchIndex].player2Image} alt={upcomingMatches[selectedUpcomingMatchIndex].player2} className="w-8 h-8 rounded-full" />
+                    </div>
+                    <div className="font-medium text-neutral-100">
+                      <Link to={`/player/${encodeURIComponent(upcomingMatches[selectedUpcomingMatchIndex].player1)}`} className="hover:underline text-green-300">{upcomingMatches[selectedUpcomingMatchIndex].player1}</Link>
+                      <span className="mx-2">vs</span>
+                      <Link to={`/player/${encodeURIComponent(upcomingMatches[selectedUpcomingMatchIndex].player2)}`} className="hover:underline text-green-300">{upcomingMatches[selectedUpcomingMatchIndex].player2}</Link>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center space-x-2 mb-2">
+                      <div className="flex -space-x-2">
+                        <PlayerImage src={upcomingMatches[selectedUpcomingMatchIndex].player1Image} alt={upcomingMatches[selectedUpcomingMatchIndex].player1} className="w-8 h-8 rounded-full" />
+                        {upcomingMatches[selectedUpcomingMatchIndex].player1PartnerImage && (
+                          <PlayerImage src={upcomingMatches[selectedUpcomingMatchIndex].player1PartnerImage} alt={upcomingMatches[selectedUpcomingMatchIndex].player1Partner || ''} className="w-8 h-8 rounded-full" />
+                        )}
+                      </div>
+                      <span className="font-medium text-neutral-200">vs</span>
+                      <div className="flex -space-x-2">
+                        <PlayerImage src={upcomingMatches[selectedUpcomingMatchIndex].player2Image} alt={upcomingMatches[selectedUpcomingMatchIndex].player2} className="w-8 h-8 rounded-full" />
+                        {upcomingMatches[selectedUpcomingMatchIndex].player2PartnerImage && (
+                          <PlayerImage src={upcomingMatches[selectedUpcomingMatchIndex].player2PartnerImage} alt={upcomingMatches[selectedUpcomingMatchIndex].player2Partner || ''} className="w-8 h-8 rounded-full" />
+                        )}
+                      </div>
+                    </div>
+                    <div className="font-medium text-neutral-100">
+                      <div>
+                        <Link to={`/player/${encodeURIComponent(upcomingMatches[selectedUpcomingMatchIndex].player1)}`} className="hover:underline text-green-300">{upcomingMatches[selectedUpcomingMatchIndex].player1}</Link>
+                        {upcomingMatches[selectedUpcomingMatchIndex].player1Partner && (
+                          <>
+                            <span className="mx-1">/</span>
+                            <Link to={`/player/${encodeURIComponent(upcomingMatches[selectedUpcomingMatchIndex].player1Partner)}`} className="hover:underline text-green-300">{upcomingMatches[selectedUpcomingMatchIndex].player1Partner}</Link>
+                          </>
+                        )}
+                      </div>
+                      <div className="text-sm text-neutral-300">vs</div>
+                      <div>
+                        <Link to={`/player/${encodeURIComponent(upcomingMatches[selectedUpcomingMatchIndex].player2)}`} className="hover:underline text-green-300">{upcomingMatches[selectedUpcomingMatchIndex].player2}</Link>
+                        {upcomingMatches[selectedUpcomingMatchIndex].player2Partner && (
+                          <>
+                            <span className="mx-1">/</span>
+                            <Link to={`/player/${encodeURIComponent(upcomingMatches[selectedUpcomingMatchIndex].player2Partner)}`} className="hover:underline text-green-300">{upcomingMatches[selectedUpcomingMatchIndex].player2Partner}</Link>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
+                <div className="text-sm text-neutral-300 mt-1">
+                  <span>{upcomingMatches[selectedUpcomingMatchIndex].round}</span>
+                  <span className="mx-2">•</span>
+                  <span>{new Date(upcomingMatches[selectedUpcomingMatchIndex].dateTime).toLocaleString()}</span>
                 </div>
-                <Link to="/players" className="px-4 py-2 rounded-full bg-green-600/20 text-green-300 hover:bg-green-600/30 transition">
-                  View All Rankings
-                </Link>
               </div>
+              <button
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 rounded-full p-2 hover:bg-neutral-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => handleNavigation(selectedUpcomingMatchIndex, setSelectedUpcomingMatchIndex, upcomingMatches, 'next')}
+              >
+                ▶
+              </button>
             </div>
-            <div className="group-hover:bg-green-900/20 group-hover:rounded-lg transition-colors">
-              <PlayerCarousel tour={selectedTour} />
+          </div>
+
+          {/* Recent Match Results */}
+          <div className="relative bg-green-900/50 rounded-lg p-6 shadow-md">
+            <h2 className="text-xl font-semibold text-neutral-100 mb-4">Recent Match Results</h2>
+            <div className="flex items-center justify-center group">
+              <button
+                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 rounded-full p-2 hover:bg-neutral-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => handleNavigation(selectedResultIndex, setSelectedResultIndex, recentResults, 'prev')}
+              >
+                ◀
+              </button>
+              <div className="bg-green-900/30 p-4 rounded-md shadow-sm w-[350px]">
+                <div className="flex justify-between items-start">
+                  <div className="text-sm text-neutral-300 font-medium mb-1">{recentResults[selectedResultIndex].tournament}</div>
+                  <div className="flex gap-2">
+                    <span className={`px-2 py-0.5 text-xs rounded-full ${
+                      recentResults[selectedResultIndex].matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
+                    }`}>
+                      {recentResults[selectedResultIndex].matchType}
+                    </span>
+                    <span className={`px-2 py-0.5 text-xs rounded-full ${
+                      recentResults[selectedResultIndex].tour === 'ATP' ? 'bg-blue-600/20 text-blue-300' : 'bg-pink-600/20 text-pink-300'
+                    }`}>
+                      {recentResults[selectedResultIndex].tour}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2 mb-2">
+                  <PlayerImage src={recentResults[selectedResultIndex].winnerImage} alt={recentResults[selectedResultIndex].winner} className="w-8 h-8 rounded-full" />
+                  <span className="text-xs text-neutral-400">def.</span>
+                  <PlayerImage src={recentResults[selectedResultIndex].loserImage} alt={recentResults[selectedResultIndex].loser} className="w-8 h-8 rounded-full" />
+                </div>
+                <div>
+                  <span className="font-medium text-neutral-100">
+                    <Link to={`/player/${encodeURIComponent(recentResults[selectedResultIndex].winner)}`} className="hover:underline text-green-300">{recentResults[selectedResultIndex].winner}</Link>
+                  </span>
+                  <span className="text-neutral-300"> def. </span>
+                  <span className="font-medium text-neutral-200">
+                    <Link to={`/player/${encodeURIComponent(recentResults[selectedResultIndex].loser)}`} className="hover:underline text-green-300">{recentResults[selectedResultIndex].loser}</Link>
+                  </span>
+                </div>
+                <div className="text-sm text-neutral-300 mt-1">
+                  <span>{recentResults[selectedResultIndex].score}</span>
+                  <span className="mx-2">•</span>
+                  <span>{new Date(recentResults[selectedResultIndex].date).toLocaleDateString()}</span>
+                </div>
+              </div>
+              <button
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 rounded-full p-2 hover:bg-neutral-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => handleNavigation(selectedResultIndex, setSelectedResultIndex, recentResults, 'next')}
+              >
+                ▶
+              </button>
+            </div>
+          </div>
+
+          {/* Featured Players */}
+          <div className="relative bg-green-900/50 rounded-lg p-6 shadow-md">
+            <h2 className="text-xl font-semibold text-neutral-100 mb-4">Featured Players</h2>
+            <div className="flex items-center justify-center group">
+              <button
+                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 rounded-full p-2 hover:bg-neutral-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => handleNavigation(selectedFeaturedPlayerIndex, setSelectedFeaturedPlayerIndex, predictions, 'prev')}
+              >
+                ◀
+              </button>
+              <div className="bg-green-900/30 p-4 rounded-md shadow-sm w-[350px]">
+                <PlayerCarousel tour={selectedTour} />
+              </div>
+              <button
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 rounded-full p-2 hover:bg-neutral-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => handleNavigation(selectedFeaturedPlayerIndex, setSelectedFeaturedPlayerIndex, predictions, 'next')}
+              >
+                ▶
+              </button>
             </div>
           </div>
         </div>
       </div>
-    );
+    </div>
+  );
 };
 
-export default Dashboard; 
+export default Dashboard;
