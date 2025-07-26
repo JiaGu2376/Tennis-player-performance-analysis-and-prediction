@@ -115,7 +115,58 @@ const Dashboard: FC = () => {
       matchType: 'Singles',
       tournament: 'Miami Open'
     },
-    // Add more predictions...
+    {
+      id: '2',
+      player1: 'Jannik Sinner',
+      player2: 'Daniil Medvedev',
+      player1Image: playerImages['Jannik Sinner'] || defaultPlayerImage,
+      player2Image: playerImages['Daniil Medvedev'] || defaultPlayerImage,
+      predictedWinner: 'Jannik Sinner',
+      confidence: 82,
+      matchTime: '2024-03-21T17:30:00Z',
+      tour: 'ATP',
+      matchType: 'Singles',
+      tournament: 'Miami Open'
+    },
+    {
+      id: '3',
+      player1: 'Stefanos Tsitsipas',
+      player2: 'Alexander Zverev',
+      player1Image: playerImages['Stefanos Tsitsipas'] || defaultPlayerImage,
+      player2Image: playerImages['Alexander Zverev'] || defaultPlayerImage,
+      predictedWinner: 'Alexander Zverev',
+      confidence: 68,
+      matchTime: '2024-03-22T19:00:00Z',
+      tour: 'ATP',
+      matchType: 'Singles',
+      tournament: 'Miami Open'
+    },
+    {
+      id: '4',
+      player1: 'Iga Świątek',
+      player2: 'Aryna Sabalenka',
+      player1Image: defaultPlayerImage,
+      player2Image: defaultPlayerImage,
+      predictedWinner: 'Iga Świątek',
+      confidence: 71,
+      matchTime: '2024-03-23T16:00:00Z',
+      tour: 'WTA',
+      matchType: 'Singles',
+      tournament: 'Miami Open'
+    },
+    {
+      id: '5',
+      player1: 'Coco Gauff',
+      player2: 'Elena Rybakina',
+      player1Image: defaultPlayerImage,
+      player2Image: defaultPlayerImage,
+      predictedWinner: 'Elena Rybakina',
+      confidence: 65,
+      matchTime: '2024-03-24T18:30:00Z',
+      tour: 'WTA',
+      matchType: 'Singles',
+      tournament: 'Miami Open'
+    }
   ];
 
   const upcomingMatches: UpcomingMatch[] = [
@@ -188,7 +239,54 @@ const Dashboard: FC = () => {
       tour: 'ATP',
       matchType: 'Singles'
     },
-    // Add more results...
+    {
+      id: '2',
+      winner: 'Carlos Alcaraz',
+      loser: 'Alexander Zverev',
+      winnerImage: playerImages['Carlos Alcaraz'] || defaultPlayerImage,
+      loserImage: playerImages['Alexander Zverev'] || defaultPlayerImage,
+      score: '7-6(4), 6-1',
+      tournament: 'Indian Wells',
+      date: '2024-03-16T00:00:00Z',
+      tour: 'ATP',
+      matchType: 'Singles'
+    },
+    {
+      id: '3',
+      winner: 'Iga Świątek',
+      loser: 'Maria Sakkari',
+      winnerImage: defaultPlayerImage,
+      loserImage: defaultPlayerImage,
+      score: '6-4, 6-0',
+      tournament: 'Indian Wells',
+      date: '2024-03-17T00:00:00Z',
+      tour: 'WTA',
+      matchType: 'Singles'
+    },
+    {
+      id: '4',
+      winner: 'Elena Rybakina',
+      loser: 'Jessica Pegula',
+      winnerImage: defaultPlayerImage,
+      loserImage: defaultPlayerImage,
+      score: '7-6(6), 6-4',
+      tournament: 'Indian Wells',
+      date: '2024-03-16T00:00:00Z',
+      tour: 'WTA',
+      matchType: 'Singles'
+    },
+    {
+      id: '5',
+      winner: 'Novak Djokovic',
+      loser: 'Stefanos Tsitsipas',
+      winnerImage: playerImages['Novak Djokovic'] || defaultPlayerImage,
+      loserImage: playerImages['Stefanos Tsitsipas'] || defaultPlayerImage,
+      score: '6-3, 7-6(3)',
+      tournament: 'Indian Wells',
+      date: '2024-03-15T00:00:00Z',
+      tour: 'ATP',
+      matchType: 'Singles'
+    }
   ];
 
   const handleNavigation = (currentIndex: number, setIndex: (index: number) => void, items: any[], direction: 'prev' | 'next') => {
