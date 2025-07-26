@@ -42,6 +42,18 @@ const NavBar: FC = () => {
         >
           Players
         </NavLink>
+        <NavLink
+          to="/matches"
+          className={({ isActive }) =>
+            `px-5 py-2 rounded-full font-sans text-base font-semibold transition border-2 ${
+              isActive
+                ? 'bg-green-900 text-white border-green-900'
+                : 'bg-transparent text-green-900 border-green-900 hover:bg-green-900/10'
+            }`
+          }
+        >
+          Matches
+        </NavLink>
       </div>
       <form onSubmit={handleSearch} className="flex items-center space-x-2">
         <input

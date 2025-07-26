@@ -451,7 +451,18 @@ const Dashboard: FC = () => {
 
           {/* Recent Match Results */}
           <div className="relative bg-green-900/50 rounded-lg p-6 shadow-md">
-            <h2 className="text-xl font-semibold text-neutral-100 mb-4">Recent Match Results</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-neutral-100">Recent Match Results</h2>
+              <Link 
+                to="/matches" 
+                className="px-3 py-1 text-sm bg-green-800/30 rounded hover:bg-green-800/50 transition text-neutral-100 flex items-center space-x-1"
+              >
+                <span>View All</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
             <div className="flex items-center justify-center group">
               <button
                 className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 rounded-full p-2 hover:bg-neutral-700 opacity-0 group-hover:opacity-100 transition-opacity"
