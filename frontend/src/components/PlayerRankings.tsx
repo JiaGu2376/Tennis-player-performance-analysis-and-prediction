@@ -398,7 +398,7 @@ const PlayerRankings: FC<PlayerRankingsProps> = ({ initialTour = 'ATP' }) => {
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              ATP Tour
+              ATP
             </button>
             <button
               onClick={() => setSelectedTour('WTA')}
@@ -408,7 +408,7 @@ const PlayerRankings: FC<PlayerRankingsProps> = ({ initialTour = 'ATP' }) => {
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              WTA Tour
+              WTA
             </button>
           </div>
         </div>
