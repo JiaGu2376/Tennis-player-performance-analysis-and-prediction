@@ -1,7 +1,85 @@
 import type { FC } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import PlayerCarousel from './PlayerCarousel';
+// Featured players data
+const featuredPlayers: Array<{
+  name: string;
+  image: string;
+  rank: number;
+  points: number;
+  winRate: number;
+  tour: 'ATP' | 'WTA';
+  matchType: 'Singles' | 'Doubles';
+  country: string;
+  bio: string;
+}> = [
+  {
+    name: 'Novak Djokovic',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Novak_Djokovic_Queen%27s_Club_2018.jpg/200px-Novak_Djokovic_Queen%27s_Club_2018.jpg',
+    rank: 1,
+    points: 11055,
+    winRate: 88,
+    tour: 'ATP',
+    matchType: 'Singles',
+    country: 'Serbia',
+    bio: 'All-time Grand Slam singles titles record holder with exceptional all-court game'
+  },
+  {
+    name: 'Iga Świątek',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Iga_%C5%9Awi%C4%85tek_%2851669411976%29.jpg/200px-Iga_%C5%9Awi%C4%85tek_%2851669411976%29.jpg',
+    rank: 1,
+    points: 10835,
+    winRate: 87,
+    tour: 'WTA',
+    matchType: 'Singles',
+    country: 'Poland',
+    bio: 'Dominant force in women\'s tennis with exceptional clay court prowess'
+  },
+  {
+    name: 'Rajeev Ram / Joe Salisbury',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Rajeev_Ram_%2851974719492%29.jpg/200px-Rajeev_Ram_%2851974719492%29.jpg',
+    rank: 1,
+    points: 7850,
+    winRate: 82,
+    tour: 'ATP',
+    matchType: 'Doubles',
+    country: 'USA/GBR',
+    bio: 'Top-ranked men\'s doubles team, multiple Grand Slam champions'
+  },
+  {
+    name: 'Carlos Alcaraz',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Carlos_Alcaraz_%28ESP%29_%2852424771144%29.jpg/200px-Carlos_Alcaraz_%28ESP%29_%2852424771144%29.jpg',
+    rank: 2,
+    points: 8805,
+    winRate: 85,
+    tour: 'ATP',
+    matchType: 'Singles',
+    country: 'Spain',
+    bio: 'Youngest year-end World No. 1 in ATP rankings history'
+  },
+  {
+    name: 'Coco Gauff / Jessica Pegula',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Cori_Gauff_%2851669411746%29.jpg/200px-Cori_Gauff_%2851669411746%29.jpg',
+    rank: 1,
+    points: 7100,
+    winRate: 78,
+    tour: 'WTA',
+    matchType: 'Doubles',
+    country: 'USA',
+    bio: 'Dynamic American duo dominating women\'s doubles circuit'
+  },
+  {
+    name: 'Aryna Sabalenka',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Aryna_Sabalenka_%2851975255663%29.jpg/200px-Aryna_Sabalenka_%2851975255663%29.jpg',
+    rank: 2,
+    points: 8045,
+    winRate: 82,
+    tour: 'WTA',
+    matchType: 'Singles',
+    country: 'Belarus',
+    bio: '2024 Australian Open champion with powerful aggressive game'
+  }
+];
 
 interface Player {
   name: string;
@@ -59,7 +137,6 @@ interface MatchResult {
 }
 
 const Dashboard: FC = () => {
-  const [selectedTour, setSelectedTour] = useState<'ATP' | 'WTA'>('ATP');
   const [selectedPredictionIndex, setSelectedPredictionIndex] = useState(0);
   const [selectedUpcomingMatchIndex, setSelectedUpcomingMatchIndex] = useState(0);
   const [selectedResultIndex, setSelectedResultIndex] = useState(0);
@@ -73,6 +150,14 @@ const Dashboard: FC = () => {
     'Daniil Medvedev': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Daniil_Medvedev_%2852425461890%29.jpg/200px-Daniil_Medvedev_%2852425461890%29.jpg',
     'Alexander Zverev': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Alexander_Zverev_%2851635591102%29.jpg/200px-Alexander_Zverev_%2851635591102%29.jpg',
     'Stefanos Tsitsipas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Stefanos_Tsitsipas_%2851635591117%29.jpg/200px-Stefanos_Tsitsipas_%2851635591117%29.jpg'
+  };
+
+  const handleNavigation = (currentIndex: number, setIndex: (index: number) => void, items: Array<MatchPrediction | MatchResult | UpcomingMatch | Player>, direction: 'prev' | 'next') => {
+    if (direction === 'prev') {
+      setIndex(currentIndex === 0 ? items.length - 1 : currentIndex - 1);
+    } else {
+      setIndex(currentIndex === items.length - 1 ? 0 : currentIndex + 1);
+    }
   };
 
   const defaultPlayerImage = 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Portrait_Placeholder.png/200px-Portrait_Placeholder.png';
@@ -288,14 +373,6 @@ const Dashboard: FC = () => {
       matchType: 'Singles'
     }
   ];
-
-  const handleNavigation = (currentIndex: number, setIndex: (index: number) => void, items: any[], direction: 'prev' | 'next') => {
-    if (direction === 'prev') {
-      setIndex((currentIndex - 1 + items.length) % items.length);
-    } else {
-      setIndex((currentIndex + 1) % items.length);
-    }
-  };
 
   return (
     <div className="min-h-screen w-full bg-background text-text">
@@ -515,22 +592,85 @@ const Dashboard: FC = () => {
             </div>
           </div>
 
-          {/* Featured Players */}
+                  {/* Featured Players */}
           <div className="relative bg-green-900/50 rounded-lg p-6 shadow-md">
-            <h2 className="text-xl font-semibold text-neutral-100 mb-4">Featured Players</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-neutral-100">Featured Players</h2>
+              <Link 
+                to="/players" 
+                className="px-3 py-1 text-sm bg-green-800/30 rounded hover:bg-green-800/50 transition text-neutral-100 flex items-center space-x-1"
+              >
+                <span>View All</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
             <div className="flex items-center justify-center group">
               <button
                 className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 rounded-full p-2 hover:bg-neutral-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={() => handleNavigation(selectedFeaturedPlayerIndex, setSelectedFeaturedPlayerIndex, predictions, 'prev')}
+                onClick={() => handleNavigation(selectedFeaturedPlayerIndex, setSelectedFeaturedPlayerIndex, featuredPlayers, 'prev')}
               >
                 ◀
               </button>
               <div className="bg-green-900/30 p-4 rounded-md shadow-sm w-[350px]">
-                <PlayerCarousel tour={selectedTour} />
+                {(() => {
+                  const player = featuredPlayers[selectedFeaturedPlayerIndex];
+                  return (
+                    <div className="flex items-center space-x-4">
+                      <PlayerImage 
+                        src={player.image} 
+                        alt={player.name} 
+                        className="w-20 h-20" 
+                      />
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <Link to={`/player/${encodeURIComponent(player.name)}`} className="font-medium text-green-300 hover:underline text-lg">
+                              {player.name}
+                            </Link>
+                            <div className="text-sm text-neutral-400">{player.country}</div>
+                          </div>
+                          <div className="flex gap-2">
+                            <span className={`px-2 py-0.5 text-xs rounded-full ${
+                              player.matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
+                            }`}>
+                              {player.matchType}
+                            </span>
+                            <span className={`px-2 py-0.5 text-xs rounded-full ${
+                              player.tour === 'ATP' ? 'bg-blue-600/20 text-blue-300' : 'bg-pink-600/20 text-pink-300'
+                            }`}>
+                              {player.tour}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center text-sm text-neutral-300 mb-2">
+                          <span>Rank #{player.rank}</span>
+                          <span>{player.points} pts</span>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-neutral-300">Win Rate</span>
+                            <div className="flex items-center">
+                              <div className="w-24 h-2 bg-green-950/50 rounded-full mr-2">
+                                <div 
+                                  className="h-2 bg-neutral-100 rounded-full" 
+                                  style={{ width: `${player.winRate}%` }}
+                                />
+                              </div>
+                              <span className="text-neutral-100">{player.winRate}%</span>
+                            </div>
+                          </div>
+                          <div className="text-sm text-neutral-300 line-clamp-2">{player.bio}</div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
               <button
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 rounded-full p-2 hover:bg-neutral-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={() => handleNavigation(selectedFeaturedPlayerIndex, setSelectedFeaturedPlayerIndex, predictions, 'next')}
+                onClick={() => handleNavigation(selectedFeaturedPlayerIndex, setSelectedFeaturedPlayerIndex, featuredPlayers, 'next')}
               >
                 ▶
               </button>
