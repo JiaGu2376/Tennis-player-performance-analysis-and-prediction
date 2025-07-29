@@ -16,7 +16,10 @@ const NavBar: FC = () => {
 
   return (
     <nav className="bg-background text-text px-6 py-3 flex items-center justify-between shadow-md">
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-4">
+        <NavLink to="/" className="flex items-center">
+          <img src="/src/assets/tennis-ball-icon.png" alt="Tennis Ball" className="w-8 h-8" />
+        </NavLink>
         <NavLink
           to="/"
           end
