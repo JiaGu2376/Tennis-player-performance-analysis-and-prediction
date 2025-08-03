@@ -4,6 +4,7 @@ import PlayerProfile from './components/PlayerProfile';
 import PlayerRankings from './components/PlayerRankings';
 import Dashboard from './components/Dashboard';
 import Matches from './components/Matches';
+import Tournaments from './components/Tournaments';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/player/:playerName" element={<PlayerProfile />} />
         <Route path="/players" element={<PlayerRankings />} />
         <Route path="/matches" element={<Matches />} />
+        <Route path="/tournament/:tournamentName" element={<Tournaments />} />
       </Routes>
     </>
   );

@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getTournamentRouteId } from '../utils/routeUtils';
 
 interface MatchResult {
   id: string;
@@ -232,7 +233,15 @@ const Matches: FC = () => {
                 {upcomingMatchesWithPredictions.map(match => (
                   <div key={match.id} className="bg-green-900/30 p-4 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <div className="text-sm text-neutral-300 font-medium">{match.tournament} • {match.round}</div>
+                      <div className="text-sm font-medium">
+                        <Link 
+                          to={`/tournament/${getTournamentRouteId(match.tournament)}`}
+                          className="text-green-300 hover:underline"
+                        >
+                          {match.tournament}
+                        </Link>
+                        <span className="text-neutral-300"> • {match.round}</span>
+                      </div>
                       <div className="flex gap-2">
                         <span className={`px-2 py-0.5 text-xs rounded-full ${
                           match.matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
@@ -301,7 +310,14 @@ const Matches: FC = () => {
                 {recentResults.map(match => (
                   <div key={match.id} className="bg-green-900/30 p-4 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <div className="text-sm text-neutral-300 font-medium">{match.tournament}</div>
+                      <div className="text-sm font-medium">
+                        <Link 
+                          to={`/tournament/${getTournamentRouteId(match.tournament)}`}
+                          className="text-green-300 hover:underline"
+                        >
+                          {match.tournament}
+                        </Link>
+                      </div>
                       <div className="flex gap-2">
                         <span className={`px-2 py-0.5 text-xs rounded-full ${
                           match.matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
@@ -358,7 +374,14 @@ const Matches: FC = () => {
                 {archiveMatches.map(match => (
                   <div key={match.id} className="bg-green-900/30 p-4 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <div className="text-sm text-neutral-300 font-medium">{match.tournament}</div>
+                      <div className="text-sm font-medium">
+                        <Link 
+                          to={`/tournament/${getTournamentRouteId(match.tournament)}`}
+                          className="text-green-300 hover:underline"
+                        >
+                          {match.tournament}
+                        </Link>
+                      </div>
                       <div className="flex gap-2">
                         <span className={`px-2 py-0.5 text-xs rounded-full ${
                           match.matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
