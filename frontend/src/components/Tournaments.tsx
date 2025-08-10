@@ -8,6 +8,7 @@ interface TournamentDetails {
   location: string;
   surface: 'Hard' | 'Clay' | 'Grass' | 'Carpet';
   category: 'Grand Slam' | 'Masters 1000' | 'ATP 500' | 'ATP 250' | 'WTA 1000' | 'WTA 500' | 'WTA 250';
+  ownership: 'ATP' | 'WTA' | 'ITF' | 'ATP/WTA';
   startDate: string;
   endDate: string;
   description: string;
@@ -43,6 +44,7 @@ const getTournamentData = (tournamentName: string): TournamentDetails | null => 
     location: 'Melbourne, Victoria, Australia',
     surface: 'Hard',
     category: 'Grand Slam',
+    ownership: 'ITF',
     startDate: '2025-01-20',
     endDate: '2025-02-02',
     description: 'The Australian Open is one of the four Grand Slam tennis tournaments. Known as the "Happy Slam," it features the world\'s top players competing at Melbourne Park.',
@@ -54,6 +56,7 @@ const getTournamentData = (tournamentName: string): TournamentDetails | null => 
     location: 'Paris, France',
     surface: 'Clay',
     category: 'Grand Slam',
+    ownership: 'ITF',
     startDate: '2025-05-26',
     endDate: '2025-06-09',
     description: 'Roland Garros, also known as the French Open, is one of the four Grand Slam tennis tournaments. Famous for its clay courts, it is the premier clay-court tennis championship in the world.',
@@ -65,6 +68,7 @@ const getTournamentData = (tournamentName: string): TournamentDetails | null => 
     location: 'London, United Kingdom',
     surface: 'Grass',
     category: 'Grand Slam',
+    ownership: 'ITF',
     startDate: '2025-07-01',
     endDate: '2025-07-14',
     description: 'The Championships, Wimbledon is the oldest tennis tournament in the world and widely regarded as the most prestigious. It is the only Grand Slam still played on grass courts.',
@@ -76,6 +80,7 @@ const getTournamentData = (tournamentName: string): TournamentDetails | null => 
     location: 'New York City, USA',
     surface: 'Hard',
     category: 'Grand Slam',
+    ownership: 'ITF',
     startDate: '2025-08-25',
     endDate: '2025-09-07',
     description: 'The US Open is the modern version of the oldest tennis championship in the United States. It is chronologically the fourth and final Grand Slam tournament of the year.',
@@ -87,9 +92,10 @@ const getTournamentData = (tournamentName: string): TournamentDetails | null => 
     location: 'Indian Wells, California, USA',
     surface: 'Hard',
     category: 'Masters 1000',
+    ownership: 'ATP/WTA',
     startDate: '2025-03-06',
     endDate: '2025-03-17',
-    description: 'The BNP Paribas Open is one of the most prestigious tennis tournaments outside of the Grand Slams. Often called the "Fifth Grand Slam," it features world-class facilities and attracts the top players from both ATP and WTA tours.',
+    description: 'The BNP Paribas Open is one of the most prestigious tournaments outside of the Grand Slams. Often called the "Fifth Grand Slam," it features world-class facilities and attracts the top players from both ATP and WTA tours.',
     venue: 'Indian Wells Tennis Garden',
     prizemoney: '$8,800,000',
   },
@@ -98,6 +104,7 @@ const getTournamentData = (tournamentName: string): TournamentDetails | null => 
     location: 'Miami Gardens, Florida, USA',
     surface: 'Hard',
     category: 'Masters 1000',
+    ownership: 'ATP/WTA',
     startDate: '2025-03-20',
     endDate: '2025-03-31',
     description: 'The Miami Open is one of the most important tournaments in professional tennis, featuring the world\'s top-ranked players competing in the Miami Gardens area.',
@@ -109,6 +116,7 @@ const getTournamentData = (tournamentName: string): TournamentDetails | null => 
     location: 'Roquebrune-Cap-Martin, France',
     surface: 'Clay',
     category: 'Masters 1000',
+    ownership: 'ATP',
     startDate: '2025-04-07',
     endDate: '2025-04-14',
     description: 'The Monte Carlo Masters is one of the oldest and most prestigious clay-court tennis tournaments, featuring spectacular views of the Mediterranean Sea.',
@@ -120,6 +128,7 @@ const getTournamentData = (tournamentName: string): TournamentDetails | null => 
     location: 'Madrid, Spain',
     surface: 'Clay',
     category: 'Masters 1000',
+    ownership: 'ATP/WTA',
     startDate: '2025-05-01',
     endDate: '2025-05-12',
     description: 'The Madrid Open is a significant clay-court tournament that takes place in the Spanish capital, featuring both ATP and WTA tours.',
@@ -131,6 +140,7 @@ const getTournamentData = (tournamentName: string): TournamentDetails | null => 
     location: 'Rome, Italy',
     surface: 'Clay',
     category: 'Masters 1000',
+    ownership: 'ATP/WTA',
     startDate: '2025-05-14',
     endDate: '2025-05-21',
     description: 'The Italian Open, also known as the Rome Masters, is one of the most important clay court tennis tournaments in the world, leading up to the French Open.',
@@ -242,6 +252,15 @@ const Tournaments: FC = () => {
             <span>{tournament.category}</span>
             <span>•</span>
             <span>Prize Money: {tournament.prizemoney}</span>
+            <span>•</span>
+            <span className={`px-2 py-0.5 text-xs rounded-full ${
+              tournament.ownership === 'ATP' ? 'bg-blue-600/20 text-blue-300' :
+              tournament.ownership === 'WTA' ? 'bg-pink-600/20 text-pink-300' :
+              tournament.ownership === 'ATP/WTA' ? 'bg-purple-600/20 text-purple-300' :
+              'bg-green-600/20 text-green-300'
+            }`}>
+              {tournament.ownership}
+            </span>
           </div>
           <p className="text-neutral-200 leading-relaxed mb-4">{tournament.description}</p>
           <div className="text-sm text-neutral-300">
