@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getTournamentRouteId } from '../utils/routeUtils';
 
 interface MatchResult {
   id: string;
@@ -39,6 +40,19 @@ interface ArchiveMatch extends MatchResult {
   round?: string;
 }
 
+// Available tournaments
+const tournaments = [
+  { id: 'australian-open', name: 'Australian Open', type: 'Grand Slam' },
+  { id: 'roland-garros', name: 'Roland Garros', type: 'Grand Slam' },
+  { id: 'wimbledon', name: 'Wimbledon', type: 'Grand Slam' },
+  { id: 'us-open', name: 'US Open', type: 'Grand Slam' },
+  { id: 'indian-wells', name: 'BNP Paribas Open - Indian Wells', type: 'Masters 1000' },
+  { id: 'miami-open', name: 'Miami Open', type: 'Masters 1000' },
+  { id: 'monte-carlo', name: 'Monte Carlo Masters', type: 'Masters 1000' },
+  { id: 'madrid-open', name: 'Madrid Open', type: 'Masters 1000' },
+  { id: 'rome-masters', name: 'Italian Open', type: 'Masters 1000' },
+];
+
 const Matches: FC = () => {
   const [activeTab, setActiveTab] = useState<'upcoming' | 'results'>('upcoming');
   const [filters, setFilters] = useState<MatchFilter>({
@@ -46,6 +60,8 @@ const Matches: FC = () => {
     matchType: 'ALL',
     searchQuery: ''
   });
+  const [filteredTournaments, setFilteredTournaments] = useState(tournaments);
+  const [showTournamentDropdown, setShowTournamentDropdown] = useState(false);
 
   const defaultPlayerImage = 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Portrait_Placeholder.png/200px-Portrait_Placeholder.png';
 
@@ -162,6 +178,14 @@ const Matches: FC = () => {
       ...prev,
       [key]: value
     }));
+
+    if (key === 'searchQuery') {
+      const filtered = tournaments.filter(tournament =>
+        tournament.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredTournaments(filtered);
+      setShowTournamentDropdown(value.length > 0);
+    }
   };
 
   return (
@@ -214,13 +238,34 @@ const Matches: FC = () => {
               <option value="Singles">Singles</option>
               <option value="Doubles">Doubles</option>
             </select>
-            <input
-              type="text"
-              placeholder="Search matches, players, or tournaments..."
-              className="flex-1 bg-background text-text px-4 py-2 rounded-lg border-2 border-green-900"
-              value={filters.searchQuery}
-              onChange={(e) => handleFilterChange('searchQuery', e.target.value)}
-            />
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                placeholder="Search matches, players, or tournaments..."
+                className="w-full bg-background text-text px-4 py-2 rounded-lg border-2 border-green-900"
+                value={filters.searchQuery}
+                onChange={(e) => handleFilterChange('searchQuery', e.target.value)}
+                onFocus={() => setShowTournamentDropdown(filters.searchQuery.length > 0)}
+                onBlur={() => {
+                  // Delay hiding dropdown to allow for click events
+                  setTimeout(() => setShowTournamentDropdown(false), 200);
+                }}
+              />
+              {showTournamentDropdown && filteredTournaments.length > 0 && (
+                <div className="absolute z-10 w-full mt-1 bg-background border-2 border-green-900 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  {filteredTournaments.map(tournament => (
+                    <Link
+                      key={tournament.id}
+                      to={`/tournament/${tournament.id}`}
+                      className="block px-4 py-2 hover:bg-green-900/30 cursor-pointer text-text"
+                    >
+                      <div className="font-medium">{tournament.name}</div>
+                      <div className="text-sm text-neutral-400">{tournament.type}</div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -232,7 +277,15 @@ const Matches: FC = () => {
                 {upcomingMatchesWithPredictions.map(match => (
                   <div key={match.id} className="bg-green-900/30 p-4 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <div className="text-sm text-neutral-300 font-medium">{match.tournament} • {match.round}</div>
+                      <div className="text-sm font-medium">
+                        <Link 
+                          to={`/tournament/${getTournamentRouteId(match.tournament)}`}
+                          className="text-green-300 hover:underline"
+                        >
+                          {match.tournament}
+                        </Link>
+                        <span className="text-neutral-300"> • {match.round}</span>
+                      </div>
                       <div className="flex gap-2">
                         <span className={`px-2 py-0.5 text-xs rounded-full ${
                           match.matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
@@ -301,7 +354,14 @@ const Matches: FC = () => {
                 {recentResults.map(match => (
                   <div key={match.id} className="bg-green-900/30 p-4 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <div className="text-sm text-neutral-300 font-medium">{match.tournament}</div>
+                      <div className="text-sm font-medium">
+                        <Link 
+                          to={`/tournament/${getTournamentRouteId(match.tournament)}`}
+                          className="text-green-300 hover:underline"
+                        >
+                          {match.tournament}
+                        </Link>
+                      </div>
                       <div className="flex gap-2">
                         <span className={`px-2 py-0.5 text-xs rounded-full ${
                           match.matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
@@ -358,7 +418,14 @@ const Matches: FC = () => {
                 {archiveMatches.map(match => (
                   <div key={match.id} className="bg-green-900/30 p-4 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <div className="text-sm text-neutral-300 font-medium">{match.tournament}</div>
+                      <div className="text-sm font-medium">
+                        <Link 
+                          to={`/tournament/${getTournamentRouteId(match.tournament)}`}
+                          className="text-green-300 hover:underline"
+                        >
+                          {match.tournament}
+                        </Link>
+                      </div>
                       <div className="flex gap-2">
                         <span className={`px-2 py-0.5 text-xs rounded-full ${
                           match.matchType === 'Singles' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
