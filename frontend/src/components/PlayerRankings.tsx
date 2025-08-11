@@ -4,12 +4,34 @@ import { Link } from 'react-router-dom';
 
 interface PlayerRankingsProps {
   initialTour?: 'ATP' | 'WTA';
+  initialType?: 'Singles' | 'Doubles';
 }
+
+type RankingType = 'Singles' | 'Doubles';
 
 // Define the player data structure
 const defaultPlayerImage = '/default-avatar.png';
-const topPlayers = {
-  ATP: [
+interface PlayerData {
+  name: string;
+  image: string;
+  rank: number;
+  points: number;
+  country: string;
+  winRate: number;
+  tour: 'ATP' | 'WTA';
+  partner?: string;
+}
+
+interface Rankings {
+  [key: string]: {
+    Singles: PlayerData[];
+    Doubles: PlayerData[];
+  };
+}
+
+const topPlayers: Rankings = {
+  ATP: {
+    Singles: [
     {
       name: 'Novak Djokovic',
       image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Novak_Djokovic_Queen%27s_Club_2018.jpg/200px-Novak_Djokovic_Queen%27s_Club_2018.jpg',
@@ -190,8 +212,32 @@ const topPlayers = {
       winRate: 61,
       tour: 'ATP'
     }
-  ],
-  WTA: [
+    ],
+    Doubles: [
+      {
+        name: 'Rajeev Ram',
+        image: defaultPlayerImage,
+        rank: 1,
+        points: 8800,
+        country: 'USA',
+        winRate: 82,
+        tour: 'ATP',
+        partner: 'Joe Salisbury'
+      },
+      {
+        name: 'Joe Salisbury',
+        image: defaultPlayerImage,
+        rank: 2,
+        points: 8800,
+        country: 'Great Britain',
+        winRate: 82,
+        tour: 'ATP',
+        partner: 'Rajeev Ram'
+      }
+    ]
+  },
+  WTA: {
+    Singles: [
     {
       name: 'Iga Świątek',
       image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Iga_%C5%9Awi%C4%85tek_%2852425455190%29.jpg/200px-Iga_%C5%9Awi%C4%85tek_%2852425455190%29.jpg',
@@ -372,14 +418,38 @@ const topPlayers = {
       winRate: 62,
       tour: 'WTA'
     }
-  ]
+    ],
+    Doubles: [
+      {
+        name: 'Coco Gauff',
+        image: defaultPlayerImage,
+        rank: 1,
+        points: 7500,
+        country: 'USA',
+        winRate: 80,
+        tour: 'WTA',
+        partner: 'Jessica Pegula'
+      },
+      {
+        name: 'Jessica Pegula',
+        image: defaultPlayerImage,
+        rank: 2,
+        points: 7500,
+        country: 'USA',
+        winRate: 80,
+        tour: 'WTA',
+        partner: 'Coco Gauff'
+      }
+    ]
+  }
 };
 
-const PlayerRankings: FC<PlayerRankingsProps> = ({ initialTour = 'ATP' }) => {
+const PlayerRankings: FC<PlayerRankingsProps> = ({ initialTour = 'ATP', initialType = 'Singles' }) => {
   const [selectedTour, setSelectedTour] = useState<'ATP' | 'WTA'>(initialTour);
+  const [selectedType, setSelectedType] = useState<RankingType>(initialType);
 
-  // Get players for selected tour and add mock movement data
-  const players = topPlayers[selectedTour].map(player => ({
+  // Get players for selected tour and type, and add mock movement data
+  const players = topPlayers[selectedTour][selectedType].map(player => ({
     ...player,
     movement: Math.floor(Math.random() * 3) - 1, // Random movement between -1, 0, 1
   }));
@@ -389,27 +459,51 @@ const PlayerRankings: FC<PlayerRankingsProps> = ({ initialTour = 'ATP' }) => {
       <div className="max-w-3xl mx-auto p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-6xl font-medium font-ttcommons">Player Rankings</h1>
-          <div className="flex space-x-4">
-            <button
-              onClick={() => setSelectedTour('ATP')}
-              className={`px-4 py-2 rounded-full transition ${
-                selectedTour === 'ATP'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              ATP
-            </button>
-            <button
-              onClick={() => setSelectedTour('WTA')}
-              className={`px-4 py-2 rounded-full transition ${
-                selectedTour === 'WTA'
-                  ? 'bg-pink-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              WTA
-            </button>
+          <div className="flex flex-col space-y-4">
+            <div className="flex space-x-4">
+              <button
+                onClick={() => setSelectedTour('ATP')}
+                className={`px-4 py-2 rounded-full transition ${
+                  selectedTour === 'ATP'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                ATP
+              </button>
+              <button
+                onClick={() => setSelectedTour('WTA')}
+                className={`px-4 py-2 rounded-full transition ${
+                  selectedTour === 'WTA'
+                    ? 'bg-pink-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                WTA
+              </button>
+            </div>
+            <div className="flex space-x-4">
+              <button
+                onClick={() => setSelectedType('Singles')}
+                className={`px-4 py-2 rounded-full transition ${
+                  selectedType === 'Singles'
+                    ? 'bg-green-700 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                Singles
+              </button>
+              <button
+                onClick={() => setSelectedType('Doubles')}
+                className={`px-4 py-2 rounded-full transition ${
+                  selectedType === 'Doubles'
+                    ? 'bg-green-700 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                Doubles
+              </button>
+            </div>
           </div>
         </div>
         <div className="overflow-x-auto">
@@ -419,6 +513,9 @@ const PlayerRankings: FC<PlayerRankingsProps> = ({ initialTour = 'ATP' }) => {
                 <th className="py-3 px-4">Rank</th>
                 <th className="py-3 px-4">Player</th>
                 <th className="py-3 px-4">Country</th>
+                {selectedType === 'Doubles' && (
+                  <th className="py-3 px-4">Partner</th>
+                )}
                 <th className="py-3 px-4">Points</th>
                 <th className="py-3 px-4">Win Rate</th>
                 <th className="py-3 px-4">Movement</th>
@@ -435,6 +532,13 @@ const PlayerRankings: FC<PlayerRankingsProps> = ({ initialTour = 'ATP' }) => {
                     </div>
                   </td>
                   <td className="py-3 px-4 text-neutral-300">{player.country}</td>
+                  {selectedType === 'Doubles' && (
+                    <td className="py-3 px-4">
+                      <Link to={`/player/${encodeURIComponent(player.partner || '')}`} className="text-green-300 hover:underline font-medium">
+                        {player.partner}
+                      </Link>
+                    </td>
+                  )}
                   <td className="py-3 px-4 text-neutral-100">{player.points.toLocaleString()}</td>
                   <td className="py-3 px-4 text-neutral-100">{player.winRate}%</td>
                   <td className="py-3 px-4">
